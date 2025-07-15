@@ -11,7 +11,7 @@
 	<groupId>comproject</groupId>
 	<artifactId>jobApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>jobApp</name>
+	<username>jobApp</username>
 	<description>Job application</description>
 	<url/>
 	<licenses>
