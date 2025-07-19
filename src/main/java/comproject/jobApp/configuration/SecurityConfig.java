@@ -1,6 +1,7 @@
 package comproject.jobApp.configuration;
 
 import comproject.jobApp.Services.MyUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +25,26 @@ public class SecurityConfig {
     private MyUserDetailsService userDetailsService;
 
     @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(10);
+    }
+
+    @Bean
     public SecurityFilterChain sfc(HttpSecurity http) throws Exception {
         return http
                 .csrf(customiser -> customiser.disable())
-                .authorizeHttpRequests(request -> request.requestMatchers("/login", "/register", "/v3/api-docs/**", "/swagger-ui/**")
-                        .permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request.requestMatchers("/login", "/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll().
+                        anyRequest().authenticated())
                 //.formLogin(Customizer.withDefaults())
                 //.httpBasic(Customizer.withDefaults())
                 .httpBasic(httpBasic -> httpBasic.disable())
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authProvider())
                 .build();
 
     }
@@ -48,6 +59,5 @@ public class SecurityConfig {
     public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-//just addin gcommets for checking push
 
 }

@@ -22,7 +22,6 @@ public class User {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        //this.contactNo = contactNo;
         this.role = role;
     }
 
@@ -49,14 +48,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public long getContactNo() {
-//        return contactNo;
-//    }
-//
-//    public void setContactNo(long contactNo) {
-//        this.contactNo = contactNo;
-//    }
 
     public Role getRole() {
         return role;

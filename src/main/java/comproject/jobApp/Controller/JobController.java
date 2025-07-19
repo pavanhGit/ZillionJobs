@@ -6,6 +6,7 @@ import comproject.jobApp.model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class JobController {
     }
 
     @PostMapping("/jobs")
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<?> createJob(@RequestBody List<Job> job) {
         return jobService.createJob(job);
     }
@@ -32,6 +34,7 @@ public class JobController {
     }
 
     @DeleteMapping("/jobs/{id}")
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<?> deleteJob(@PathVariable int id){
         String deleted = jobService.deleteById(id);
         if(deleted != null){
@@ -41,6 +44,7 @@ public class JobController {
     }
 
     @PutMapping("/job/{id}")
+    @PreAuthorize("hasRole('RECRUITER')")
     public ResponseEntity<?> updateJob(@PathVariable int id, @RequestBody Job updatedJob){
         String updated = jobService.updateJob(id, updatedJob);
         if(updated != null){
