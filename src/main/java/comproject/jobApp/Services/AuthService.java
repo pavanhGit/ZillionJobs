@@ -51,17 +51,16 @@ public class AuthService {
     public ResponseEntity<String> login(AuthRequest authRequest) {
 
         try {
-            System.out.println("authManager: " + authManager);
-            System.out.println("Trying to authenticate user: " + authRequest.getUsername());
+//            System.out.println("authManager: " + authManager);
+//            System.out.println("Trying to authenticate user: " + authRequest.getUsername());
             Authentication authentication =
                     authManager.authenticate(
                             new UsernamePasswordAuthenticationToken( authRequest.getUsername(), authRequest.getPassword()));
             System.out.println("Is Authenticated? " + authentication.isAuthenticated());
             if(authentication.isAuthenticated()){
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                //Optional<User> user1= userRepo.findByUsername(authRequest.getUsername());
+                //SecurityContextHolder.getContext().setAuthentication(authentication);
                 String token = jwtService.generateToken(authRequest.getUsername());
-                return new ResponseEntity<>("You Logged in Successfully Token : "+ token,HttpStatus.OK);
+                return new ResponseEntity<>("You Logged in Successfully",HttpStatus.OK);
             }else {
                 return new ResponseEntity<>("Something went wrong", HttpStatus.UNAUTHORIZED);
             }
