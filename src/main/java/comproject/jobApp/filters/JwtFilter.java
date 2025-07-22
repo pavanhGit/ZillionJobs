@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,16 +22,26 @@ import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    @Autowired
+
     private JwtService jwtService;
+    private MyUserDetailsService userDetailsService;
+    private ApplicationContext context;
+
 
     @Autowired
-    private MyUserDetailsService userDetailsService;
-    @Autowired
-    private ApplicationContext context;
+    public JwtFilter(JwtService jwtService, MyUserDetailsService userDetailsService, ApplicationContext context) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.context = context;
+    }
+
+    public JwtFilter(JwtService jwtService, MyUserDetailsService userDetailsService) {
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("JWT Filter applied on: " + request.getServletPath());
+
         String authHeader = request.getHeader("Authorization");
         String token = null, username = null;
 
@@ -52,4 +63,12 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
+
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) {
+//        String path = request.getServletPath();
+//        // Don't apply JWT filter to login, register, or swagger
+//        return path.equals("/login") || path.equals("/register") || path.startsWith("/swagger") || path.startsWith("/v3/api-docs");
+//    }
+
 }

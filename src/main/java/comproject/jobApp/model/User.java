@@ -2,6 +2,7 @@ package comproject.jobApp.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 public class User {
     @Id
@@ -18,7 +19,7 @@ public class User {
     public User() {
     }
 
-    public User(Long userId, String username, String password, long contactNo, Role role) {
+    public User(Long userId, String username, String password, long contactNo,  Role role) {
         this.userId = userId;
         this.username = username;
         this.password = password;

@@ -23,15 +23,26 @@ public class JwtService {
 
     private String sceretKey = "";
 
-    public JwtService(){
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            this.sceretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+//    public JwtService(){
+//        try {
+//            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+//            SecretKey sk = keyGen.generateKey();
+//            this.sceretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
+//        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+public JwtService() {
+    try {
+        KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+        keyGen.init(256); // explicitly set key size to 256 bits
+        SecretKey sk = keyGen.generateKey();
+        this.sceretKey = Base64.getUrlEncoder().withoutPadding().encodeToString(sk.getEncoded());
+    } catch (NoSuchAlgorithmException e) {
+        System.out.println("Exception message : "+e);
+        throw new RuntimeException("Error generating secret key", e);
     }
+}
 
     public String generateToken(String username) {
 
