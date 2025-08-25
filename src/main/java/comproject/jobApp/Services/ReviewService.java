@@ -56,24 +56,7 @@ public class ReviewService {
 //        Optional<Company> company = companyRepo.findByCompId(companyId);
 //        if (company.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        return new ResponseEntity<>(company.get().getReviews(),HttpStatus.OK );
-//    }
-
-    public ResponseEntity<String> postReview(int companyId, ReviewDto reviewDto) {
-        if (reviewDto == null) {
-            return new ResponseEntity<>("Review cannot be null", HttpStatus.BAD_REQUEST);
-        }
-        Optional<Company> company = companyRepo.findById(companyId);
-        if (company.isEmpty()) {
-            return new ResponseEntity<>("Company not found", HttpStatus.NOT_FOUND);
-        }
-        Review review = new Review();
-        review.setTitle(reviewDto.getTitle());
-        review.setDescription(reviewDto.getDescription());
-        review.setRating(reviewDto.getRating());
-        review.setCompany(companyRepo.findByCompId(companyId).get());
-        rrepo.save(review);
-        return new ResponseEntity<>("Review posted successfully", HttpStatus.CREATED);
-    }
+//
 
     public ResponseEntity<String> updateReview(int companyId, int reviewId, @Valid Review review) {
         if (review == null) {
@@ -88,7 +71,7 @@ public class ReviewService {
         }
         
         // Verify the review belongs to the specified company
-        if (existingReview.get().getCompany().getCompId() != companyId) {
+        if (existingReview.get().getCompany().getCompanyid() != companyId) {
             return new ResponseEntity<>("Review does not belong to the specified company", HttpStatus.BAD_REQUEST);
         }
         
@@ -107,7 +90,7 @@ public class ReviewService {
         }
         
         // Verify the review belongs to the specified company
-        if (review.get().getCompany().getCompId() != companyId) {
+        if (review.get().getCompany().getCompanyid() != companyId) {
             return new ResponseEntity<>("Review does not belong to the specified company", HttpStatus.BAD_REQUEST);
         }
         
@@ -123,7 +106,7 @@ public class ReviewService {
         }
         
         // Verify the review belongs to the specified company
-        if (review.get().getCompany().getCompId() != companyId) {
+        if (review.get().getCompany().getCompanyid() != companyId) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         

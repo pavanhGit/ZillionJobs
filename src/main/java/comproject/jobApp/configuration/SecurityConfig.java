@@ -1,13 +1,14 @@
 package comproject.jobApp.configuration;
 
-
 import comproject.jobApp.Services.MyUserDetailsService;
 import comproject.jobApp.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,8 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private MyUserDetailsService userDetailsService;
-    private JwtFilter jwtFilter;
+    private final MyUserDetailsService userDetailsService;
+    private final JwtFilter jwtFilter;
 
     public SecurityConfig(MyUserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
@@ -34,39 +35,44 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain sfc(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(customiser -> customiser.disable())
-                .authorizeHttpRequests(request -> 
-                request.requestMatchers("/login", "/register", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .requestMatchers("/applicant/**").hasRole("APPLICANT")
-                .requestMatchers("/recruiter/**").hasRole("RECRUITER")
-                		.anyRequest().authenticated())
-////                .formLogin(Customizer.withDefaults())
-//                .httpBasic(Customizer.withDefaults())
-                .httpBasic(httpBasic -> httpBasic.disable())
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(request -> request
+                        // Public endpoints
+                        .requestMatchers("/login", "/register", "/v3/api-docs/**", "/swagger-ui/**", "/public/**",
+                                "/error","/swagger-ui.html","/swagger-resources/**").permitAll()
+                        // Applicant endpoints
+                        .requestMatchers(HttpMethod.GET, "/applicant/applications/{applicantId}").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/applicant/completeprofile").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/applicant/apply").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.PUT, "/applicant/updateprofile").hasRole("APPLICANT")
+                        // Recruiter endpoints
+                        .requestMatchers(HttpMethod.PUT, "/recruiter/updatestatus/{applicantid}").hasRole("RECRUITER")
+                        .requestMatchers(HttpMethod.PUT, "/recruiter/updatejob/{id}").hasRole("RECRUITER")
+                        .requestMatchers(HttpMethod.POST, "/recruiter/jobs").hasRole("RECRUITER")
+                        .requestMatchers(HttpMethod.GET, "/recruiter/getapplicationbyid/{jobId}").hasRole("RECRUITER")
+                        .requestMatchers(HttpMethod.DELETE, "/recruiter/deletejob/{id}").hasRole("RECRUITER")
+                        // Any other request
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider())
                 .build();
-
     }
+
     @Bean
-    public AuthenticationProvider authProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(10));
+        provider.setPasswordEncoder(passwordEncoder()); // reuse the bean
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
+
     @Bean
-    public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
-//    @Bean
-//    public JwtFilter jwtFilter(JwtService jwtService, MyUserDetailsService userDetailsService) {
-//        return new JwtFilter(jwtService, userDetailsService);
-//    }
-
 }

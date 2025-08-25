@@ -2,79 +2,73 @@ package comproject.jobApp.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import comproject.jobApp.dto.UpdatedJobDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Job {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long jobId;
 
-    private String title;
+    private String position;
     private String description;
     private String location;
     private String minSalary;
     private String maxSalary;
 
     @JsonIgnoreProperties({"jobs", "reviews"})
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "company_id", nullable = false) // FK column in Job table
     private Company company;
 
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public Job(){
-
-    }
-
-    public Job(int id, String maxSalary, String title, String description, String location, String minSalary) {
-        this.id = id;
-        this.maxSalary = maxSalary;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.minSalary = minSalary;
-    }
-
-
-    public void copyFrom(Job other) {
-        if (other == null) return;
-        this.maxSalary = other.maxSalary;
-        this.title = other.title;
+    public void copyForm(Job other) {
+        if (other == null) {
+            return;
+        }
+        this.jobId = other.jobId;
+        this.position = other.position;
         this.description = other.description;
         this.location = other.location;
         this.minSalary = other.minSalary;
+        this.maxSalary = other.maxSalary;
+        this.company = other.company; // shallow copy of company
+    }
+    public void copyForm(UpdatedJobDTO otherjob){
+        this.position = otherjob.getPosition();
+        this.description = otherjob.getDescription();
+        this.location = otherjob.getLocation();
+        this.minSalary = otherjob.getMinSalary();
+        this.maxSalary = otherjob.getMaxSalary();
     }
 
-    public int getId() {
-        return id;
+    public Job() {
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
+    public Job(Long jobId, String position, String description, String location, String minSalary, String maxSalary, Company company) {
+        this.jobId = jobId;
+        this.position = position;
+        this.description = description;
         this.location = location;
+        this.minSalary = minSalary;
+        this.maxSalary = maxSalary;
+        this.company = company;
+    }
+
+    public Long getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public String getDescription() {
@@ -83,6 +77,14 @@ public class Job {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getMinSalary() {
@@ -99,5 +101,13 @@ public class Job {
 
     public void setMaxSalary(String maxSalary) {
         this.maxSalary = maxSalary;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }

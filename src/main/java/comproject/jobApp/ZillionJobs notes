@@ -1,0 +1,13 @@
+recruiter endpoints tested and working
+------------------------------------------
+
+POST /recruiter/jobs
+
+GET /recruiter/getapplicationbyid/{jobId}
+
+DELETE /recruiter/deletejob/{id}
+------------------------------------------
+recruiter endpoints needed to be tested
+------------------------------------------
+PUT /recruiter/updatejob/{id}
+PUT /recruiter/updatestatus/{applicantid}

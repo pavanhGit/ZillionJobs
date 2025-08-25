@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,9 +53,10 @@ public class AuthService {
             System.out.println("Is Authenticated? " + authentication.isAuthenticated());
             if(authentication.isAuthenticated()){
                 //SecurityContextHolder.getContext().setAuthentication(authentication);
-                String token = jwtService.generateToken(authRequest.getUsername());
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                String token = jwtService.generateToken(userDetails);
                 System.out.println("token: " + token);
-                return new ResponseEntity<>("You Logged in Successfully : "+token,HttpStatus.OK);
+                return new ResponseEntity<>("You Logged in Successfully : " + token,HttpStatus.OK);
             }else {
                 return new ResponseEntity<>("Something went wrong", HttpStatus.UNAUTHORIZED);
             }
