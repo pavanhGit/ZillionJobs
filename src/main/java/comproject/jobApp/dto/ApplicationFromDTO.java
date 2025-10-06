@@ -19,6 +19,7 @@ public class ApplicationFromDTO {
     @NotNull(message = "Date is required")
     private Date appliedOn;
 
+
     public ApplicationFromDTO(String applcantName, String applicantEmail, String resumeLink, Long jobId, Date appliedOn) {
         this.applcantName = applcantName;
         this.applicantEmail = applicantEmail;
