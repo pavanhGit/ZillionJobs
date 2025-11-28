@@ -22,3 +22,69 @@ PUT /recruiter/updatestatus/{applicantid}
 | **Deployment, CI/CD, DevOps**                 | It’s not just writing code — deploying, monitoring, building pipeline are crucial | No evidence of Docker, deployment scripts, CI workflow (GitHub Actions or similar).                                |
 | **Tests (Unit / Integration / API tests)**    | Tests show code quality and discipline                                            | I did *not* see a test folder or test suites in the project.                                                       |
 | **Performance / Caching / Optimization**      | Real apps need to scale; optimization matters                                     | No caching, no mention of optimizing queries or performance considerations.                                        |
+
+
+Features planned to add for this project:
+====================================================================
+🟦 1 — Asynchronous Email System (High Impact, Easy Win)
+
+This adds multithreading, executor service, and async behavior.
+
+What you build
+
+When user applies → immediately return success
+In background → send “Your application submitted” email
+When job is posted → send recruiter notification email
+
+Tech used :
+@Async
+Custom thread pool
+Email sender
+Background task processing
+
+Resume line:
+“Implemented asynchronous event-driven email notifications using Spring @Async
+and custom ExecutorService, reducing API latency by 40%.”
+=====================================================================
+🟦 2 — Redis Caching Layer (Very High Recruiter Impact)
+
+Adds performance engineering.
+
+What you add
+
+Cache job listings
+Cache company details
+Cache popular searches
+TTL expiry
+Automatic invalidation
+
+Tech used:
+Spring Data Redis
+Lettuce or Jedis client
+Cache annotations (@Cacheable, @CacheEvict)
+
+Resume line:
+“Integrated Redis caching to accelerate job listing APIs by 5x and reduce database load.”
+=====================================================================
+🟦 3 — File Upload + AWS S3 Storage (Real Industry Feature)
+
+User uploads:
+Resume (PDF)
+Company logo
+Job attachments
+
+Tech used:
+AWS SDK
+S3 bucket
+Signed URLs
+File validation
+
+Resume line:
+“Implemented secure file upload and storage using AWS S3 with presigned URLs and validation.”
+=====================================================================
+
+=====================================================================
+
+=====================================================================
+
+=====================================================================
