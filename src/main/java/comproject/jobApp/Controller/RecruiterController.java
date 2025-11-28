@@ -39,11 +39,7 @@ public class RecruiterController {
     @DeleteMapping("/deletejob/{id}")
     @Operation(summary = "Delete the job")
     public ResponseEntity<?> deleteJob(@PathVariable Long id){
-        String deleted = jobService.deleteById(id);
-        if(deleted != null){
-            return new ResponseEntity<>("Job is deleted", HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return jobService.deleteJob(id);
     }
     @PutMapping("/updatejob/{id}")
     @Operation(summary = "Update the job")

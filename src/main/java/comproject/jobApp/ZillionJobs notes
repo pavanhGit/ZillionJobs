@@ -11,3 +11,14 @@ recruiter endpoints needed to be tested
 ------------------------------------------
 PUT /recruiter/updatejob/{id}
 PUT /recruiter/updatestatus/{applicantid}
+
+| Gap                                           | Why it matters / what recruiter expects                                           | What I saw (or didn’t see) in your repo                                                                            |
+| --------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Security / Authentication / Authorization** | Every non‑toy app needs secure login, role checks                                 | I didn’t see code for login, user roles (employer / job seeker), token / session management.                       |
+| **API Documentation**                         | You need Swagger / OpenAPI or at least good docs so others can use your APIs      | No `swagger` or `swagger-ui` config or API spec files that I could find.                                           |
+| **Search / Filtering / Pagination / Sorting** | Real job platforms heavily rely on these for usability                            | I see simple search but not advanced filtering (skills, location, date) or pagination control.                     |
+| **Database / Migrations / Schema Management** | Real projects evolve; recruiters expect DB versioning & thoughtful schema         | I did not find a migrations tool (Flyway / Liquibase), or comments on indexes / relationships.                     |
+| **Error Handling / Validation / Logging**     | Handling edge cases, validating inputs, meaningful errors → shows maturity        | I didn’t see robust exception handling, input validation, consistent error responses, or logging frameworks usage. |
+| **Deployment, CI/CD, DevOps**                 | It’s not just writing code — deploying, monitoring, building pipeline are crucial | No evidence of Docker, deployment scripts, CI workflow (GitHub Actions or similar).                                |
+| **Tests (Unit / Integration / API tests)**    | Tests show code quality and discipline                                            | I did *not* see a test folder or test suites in the project.                                                       |
+| **Performance / Caching / Optimization**      | Real apps need to scale; optimization matters                                     | No caching, no mention of optimizing queries or performance considerations.                                        |

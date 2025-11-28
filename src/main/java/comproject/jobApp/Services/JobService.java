@@ -8,9 +8,12 @@ import comproject.jobApp.dto.UpdatedJobDTO;
 import comproject.jobApp.model.Company;
 import comproject.jobApp.model.Job;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +29,8 @@ public class JobService {
     private UserRepository userRepo;
 
 
-    public List<Job> findAll() {
-        return jobRepo.findAll();
+    public Page<Job> findAll(Pageable pageable) {
+        return jobRepo.findAll(pageable);
     }
 
     public ResponseEntity<?> createJob(Job job) {
@@ -52,12 +55,12 @@ public class JobService {
         }
         return new ResponseEntity<>("Job NOT FOUND", HttpStatus.NOT_FOUND);
     }
-    public String deleteById(Long id) {
+    public ResponseEntity<?> deleteJob(Long id) {
         if (jobRepo.existsById(id)) {
             jobRepo.deleteById(id);
-            return "Job delete Successfull";
+            return new ResponseEntity<>("Job delete Successfull", HttpStatus.OK);
         } else {
-            return "Job not found";
+            return new ResponseEntity<>("Job not found", HttpStatus.NOT_FOUND);
         }
     }
    public ResponseEntity<?> updateJob(Long id, UpdatedJobDTO updatedJob) {
@@ -70,7 +73,6 @@ public class JobService {
         }
        return new ResponseEntity("Job not found",HttpStatus.NOT_FOUND);
     }
-
 
 }
 

@@ -4,6 +4,9 @@ package comproject.jobApp.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import comproject.jobApp.dto.UpdatedJobDTO;
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
 
 @Entity
 public class Job {
@@ -16,6 +19,7 @@ public class Job {
     private String location;
     private String minSalary;
     private String maxSalary;
+    private LocalDate postedDate;
 
     @JsonIgnoreProperties({"jobs", "reviews"})
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -32,6 +36,7 @@ public class Job {
         this.location = other.location;
         this.minSalary = other.minSalary;
         this.maxSalary = other.maxSalary;
+        this.postedDate = other.postedDate;
         this.company = other.company; // shallow copy of company
     }
     public void copyForm(UpdatedJobDTO otherjob){
@@ -45,13 +50,14 @@ public class Job {
     public Job() {
     }
 
-    public Job(Long jobId, String position, String description, String location, String minSalary, String maxSalary, Company company) {
+    public Job(Long jobId, String position, String description, String location, String minSalary, String maxSalary, LocalDate postedDate, Company company) {
         this.jobId = jobId;
         this.position = position;
         this.description = description;
         this.location = location;
         this.minSalary = minSalary;
         this.maxSalary = maxSalary;
+        this.postedDate = postedDate;
         this.company = company;
     }
 
@@ -101,6 +107,14 @@ public class Job {
 
     public void setMaxSalary(String maxSalary) {
         this.maxSalary = maxSalary;
+    }
+
+    public LocalDate getPostedDate() {
+        return postedDate;
+    }
+
+    public void setPostedDate(LocalDate postedDate) {
+        this.postedDate = postedDate;
     }
 
     public Company getCompany() {
